@@ -1,0 +1,6 @@
+- Mount Eden Normal School
+- Cornwall Park District School
+- Remuera School
+- Meadowbank School
+- Victoria Avenue School
+- Newton Central School

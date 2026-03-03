@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auckland Primary Schools</title>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --card: #ffffff;
+    --accent: #1a3a5c;
+    --accent-light: #2a5a8c;
+    --ns-color: #1a6b4a;
+    --ac-color: #7c3a1a;
+    --text: #2c3e50;
+    --text-muted: #6b7c93;
+    --border: #e2e8f0;
+    --shadow: 0 2px 12px rgba(0,0,0,.06);
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: #fff;
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+  header h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -.02em; }
+  header p { margin-top: 8px; opacity: .85; font-size: .95rem; }
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 20px;
+  }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 2rem; font-weight: 700; }
+  .stat-label { font-size: .8rem; opacity: .75; }
+
+  /* Toolbar */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    margin: 0;
+    padding: 16px 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .toolbar input {
+    flex: 1;
+    min-width: 180px;
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .95rem;
+    outline: none;
+    background: var(--card);
+    transition: border-color .2s;
+  }
+  .toolbar input:focus { border-color: var(--accent-light); }
+  .toolbar .count-badge {
+    font-size: .85rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .btn {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    color: var(--text);
+    transition: all .15s;
+  }
+  .btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Region tabs */
+  .region-tabs {
+    display: flex;
+    gap: 6px;
+  }
+  .region-tab {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    color: var(--text-muted);
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .region-tab:hover { border-color: var(--accent); color: var(--accent); }
+  .region-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .region-tab .tab-count {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.25);
+    font-size: .75rem;
+  }
+  .region-tab:not(.active) .tab-count {
+    background: var(--bg);
+  }
+
+  /* Content */
+  .content { padding: 24px; }
+
+  /* Region section */
+  .region-section { margin-bottom: 40px; }
+  .region-section.hidden { display: none; }
+  .region-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--accent);
+  }
+  .region-header.ns { border-color: var(--ns-color); }
+  .region-header.ac { border-color: var(--ac-color); }
+  .region-header h2 { font-size: 1.4rem; font-weight: 700; }
+  .region-badge {
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: .75rem;
+    font-weight: 600;
+    color: #fff;
+  }
+  .region-badge.ns { background: var(--ns-color); }
+  .region-badge.ac { background: var(--ac-color); }
+
+  .school-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* School card */
+  .school-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow .2s;
+    border-left: 4px solid transparent;
+  }
+  .school-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,.1); }
+  .school-card.ns { border-left-color: var(--ns-color); }
+  .school-card.ac { border-left-color: var(--ac-color); }
+
+  .card-header {
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .school-card.ns .card-header { background: var(--ns-color); }
+  .school-card.ac .card-header { background: var(--ac-color); }
+  .card-header h3 { font-size: 1.05rem; font-weight: 600; }
+  .card-header .index-num {
+    font-size: .8rem;
+    opacity: .7;
+    margin-right: 10px;
+  }
+  .card-header .toggle {
+    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    transition: transform .3s;
+    flex-shrink: 0;
+  }
+  .card-header .toggle svg { fill: #fff; width: 14px; height: 14px; }
+  .school-card.collapsed .card-header .toggle { transform: rotate(-90deg); }
+
+  .card-body {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    overflow: hidden;
+    max-height: 2000px;
+    transition: max-height .4s ease;
+  }
+  .school-card.collapsed .card-body { max-height: 0; }
+
+  .card-section { padding: 20px 24px; }
+  .card-section:first-child { border-right: 1px solid var(--border); }
+  .card-section h4 {
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .card-section img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .card-section .source {
+    margin-top: 8px;
+    font-size: .75rem;
+    color: var(--text-muted);
+  }
+  .card-section .source a {
+    color: var(--accent-light);
+    text-decoration: none;
+  }
+  .card-section .source a:hover { text-decoration: underline; }
+
+  /* Back to top */
+  .back-top {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,.2);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: opacity .2s;
+    z-index: 200;
+  }
+  .back-top.show { display: flex; }
+
+  @media (max-width: 768px) {
+    .card-body { grid-template-columns: 1fr; }
+    .card-section:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    header h1 { font-size: 1.5rem; }
+    .stats-row { gap: 20px; }
+    .stat-num { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Auckland Primary Schools</h1>
+  <p>奥克兰小学统计数据与学生人口一览</p>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">25</div><div class="stat-label">学校总数</div></div>
+    <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">覆盖区域</div></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <input type="text" id="search" placeholder="搜索学校名称…" autocomplete="off">
+  <div class="region-tabs">
+    <div class="region-tab active" data-region="all">全部 <span class="tab-count">25</span></div>
+    <div class="region-tab" data-region="ns">North Shore <span class="tab-count">19</span></div>
+    <div class="region-tab" data-region="ac">Auckland City <span class="tab-count">6</span></div>
+  </div>
+  <span class="count-badge" id="countBadge"></span>
+  <button class="btn" onclick="toggleAll(true)">全部展开</button>
+  <button class="btn" onclick="toggleAll(false)">全部折叠</button>
+</div>
+
+<div class="content" id="content"></div>
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const regions = [
+  {
+    key: 'ns',
+    name: 'North Shore',
+    base: 'NorthShore',
+    schools: [
+      { name: "Long Bay School", folder: "LongBaySchool", id: 1342 },
+      { name: "Glamorgan School", folder: "GlamorganSchool", id: 1283 },
+      { name: "Torbay School", folder: "TorbaySchool", id: 1538 },
+      { name: "Ōteha Valley School", folder: "OtehaValleySchool", id: 6946 },
+      { name: "Browns Bay School", folder: "BrownsBaySchool", id: 1237 },
+      { name: "Pinehill School", folder: "PinehillSchool", id: 6932 },
+      { name: "Murrays Bay School", folder: "MurraysBaySchool", id: 1387 },
+      { name: "Mairangi Bay School", folder: "MairangiBaySchool", id: 1343 },
+      { name: "Sunnynook School", folder: "SunnynookSchool", id: 1518 },
+      { name: "Campbells Bay School", folder: "CampbellsBaySchool", id: 1242 },
+      { name: "Forrest Hill School", folder: "ForrestHillSchool", id: 1278 },
+      { name: "Milford School", folder: "MilfordSchool", id: 1375 },
+      { name: "Takapuna School", folder: "TakapunaSchool", id: 1525 },
+      { name: "Hauraki School", folder: "HaurakiSchool", id: 1304 },
+      { name: "Belmont School", folder: "BelmontSchool", id: 1226 },
+      { name: "Bayswater School", folder: "BayswaterSchool", id: 1221 },
+      { name: "Vauxhall School", folder: "VauxhallSchool", id: 1541 },
+      { name: "Stanley Bay School", folder: "StanleyBaySchool", id: 1512 },
+      { name: "Devonport School", folder: "DevonportSchool", id: 1260 },
+    ]
+  },
+  {
+    key: 'ac',
+    name: 'Auckland City',
+    base: 'AucklandCity',
+    schools: [
+      { name: "Mount Eden Normal School", folder: "MtEdenNormalSchool", id: 1378 },
+      { name: "Cornwall Park District School", folder: "CornwallParkDistrictSchool", id: 1256 },
+      { name: "Remuera School", folder: "RemueraSchool", id: 1462 },
+      { name: "Meadowbank School", folder: "MeadowbankSchool", id: 1370 },
+      { name: "Victoria Avenue School", folder: "VictoriaAvenueSchool", id: 1544 },
+      { name: "Newton Central School", folder: "NewtonCentralSchool", id: 1392 },
+    ]
+  }
+];
+
+const content = document.getElementById('content');
+const search = document.getElementById('search');
+const badge = document.getElementById('countBadge');
+const backTop = document.getElementById('backTop');
+let activeRegion = 'all';
+
+document.querySelectorAll('.region-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.region-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    activeRegion = tab.dataset.region;
+    render();
+  });
+});
+
+function render() {
+  content.innerHTML = '';
+  const q = search.value.toLowerCase();
+  let totalShown = 0;
+
+  regions.forEach(region => {
+    if (activeRegion !== 'all' && activeRegion !== region.key) return;
+
+    const filtered = region.schools.filter(s => s.name.toLowerCase().includes(q));
+    if (filtered.length === 0) return;
+
+    const section = document.createElement('div');
+    section.className = 'region-section';
+    section.innerHTML = `
+      <div class="region-header ${region.key}">
+        <h2>${region.name}</h2>
+        <span class="region-badge ${region.key}">${filtered.length} 所学校</span>
+      </div>
+      <div class="school-list" id="list-${region.key}"></div>`;
+    content.appendChild(section);
+
+    const list = section.querySelector('.school-list');
+    filtered.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.className = `school-card ${region.key}`;
+      card.innerHTML = `
+        <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <h3><span class="index-num">#${i + 1}</span>${s.name}</h3>
+          <span class="toggle"><svg viewBox="0 0 12 12"><path d="M2 4l4 4 4-4"/></svg></span>
+        </div>
+        <div class="card-body">
+          <div class="card-section">
+            <h4>School Count · 学校统计</h4>
+            <img src="./${region.base}/${s.folder}/count.png" alt="${s.name} Count" loading="lazy">
+            <div class="source">数据来源 <a href="https://education.syncrat.com/education/school/${s.id}" target="_blank">education.syncrat.com</a></div>
+          </div>
+          <div class="card-section">
+            <h4>Student Population · 学生人口</h4>
+            <img src="./${region.base}/${s.folder}/population.png" alt="${s.name} Population" loading="lazy">
+            <div class="source">数据来源 <a href="https://www.educationcounts.govt.nz/find-school/school/population/year?school=${s.id}" target="_blank">educationcounts.govt.nz</a></div>
+          </div>
+        </div>`;
+      list.appendChild(card);
+    });
+
+    totalShown += filtered.length;
+  });
+
+  badge.textContent = `显示 ${totalShown} / 25`;
+}
+
+function toggleAll(expand) {
+  document.querySelectorAll('.school-card').forEach(c => {
+    c.classList.toggle('collapsed', !expand);
+  });
+}
+
+search.addEventListener('input', render);
+
+window.addEventListener('scroll', () => {
+  backTop.classList.toggle('show', window.scrollY > 400);
+});
+
+render();
+</script>
+
+</body>
+</html>
