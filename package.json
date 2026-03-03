@@ -1,6 +1,7 @@
 {
   "name": "auckland-primary-schools",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -9,6 +10,7 @@
     "deploy": "vite build && wrangler pages deploy dist --project-name=auckland-primary-schools"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1",
     "vite": "^6",
     "wrangler": "^4"
   }
