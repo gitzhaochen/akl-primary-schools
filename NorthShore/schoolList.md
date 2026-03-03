@@ -1,0 +1,19 @@
+- Long Bay School
+- Glamorgan School
+- Torbay School
+- Ōteha Valley School
+- Browns Bay School
+- Pinehill School
+- Murrays Bay School
+- Mairangi Bay School
+- Sunnynook School
+- Campbells Bay School
+- Forrest Hill School
+- Milford School
+- Takapuna School
+- Hauraki School
+- Belmont School
+- Bayswater School
+- Vauxhall School
+- Stanley Bay School
+- Devonport School
