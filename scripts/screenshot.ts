@@ -80,9 +80,10 @@ function waitForEnter(prompt: string): Promise<void> {
 }
 
 /**
+/**
  * count.png — 只截取表格区域
  */
-async function captureCount(page: puppeteer.Page, schoolId: number, outputPath: string) {
+async function captureCount(page: import('puppeteer').Page, schoolId: number, outputPath: string) {
   const url = SYNCRAT_URL(schoolId);
   console.log(`    count.png  ← ${url}`);
   await page.goto(url, { waitUntil: 'networkidle2', timeout: 60_000 });
@@ -100,7 +101,7 @@ async function captureCount(page: puppeteer.Page, schoolId: number, outputPath: 
 /**
  * population.png — 需要用户过人机验证，滚动到底部后截图
  */
-async function capturePopulation(page: puppeteer.Page, schoolId: number, outputPath: string) {
+async function capturePopulation(page: import('puppeteer').Page, schoolId: number, outputPath: string) {
   const url = EDUCOUNTS_URL(schoolId);
   console.log(`    population.png ← ${url}`);
   await page.goto(url, { waitUntil: 'networkidle2', timeout: 60_000 });
