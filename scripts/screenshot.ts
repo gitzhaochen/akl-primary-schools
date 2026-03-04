@@ -111,10 +111,10 @@ async function capturePopulation(page: import('puppeteer').Page, schoolId: numbe
   // 滚动到页面最底部，确保所有内容加载
   let previousHeight = 0;
   while (true) {
-    const currentHeight = await page.evaluate('document.body.scrollHeight');
+    const currentHeight = await page.evaluate(() => document.body.scrollHeight as number);
     if (currentHeight === previousHeight) break;
     previousHeight = currentHeight;
-    await page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await new Promise(r => setTimeout(r, 800));
   }
 
