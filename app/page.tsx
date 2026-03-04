@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Search, ChevronDown, ChevronUp, ArrowUp, School, MapPin } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, ArrowUp, School, MapPin, X, ZoomIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -77,6 +77,7 @@ export default function Home() {
   const [showBackTop, setShowBackTop] = useState(false);
   const [allOpen, setAllOpen] = useState<boolean | null>(null);
   const [toggleKey, setToggleKey] = useState(0);
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
 
   useEffect(() => {
     const onScroll = () => setShowBackTop(window.scrollY > 400);
@@ -233,6 +234,7 @@ export default function Home() {
                     regionBase={region.base}
                     index={i}
                     defaultOpen={allOpen ?? false}
+                    onImageClick={setLightbox}
                   />
                 ))}
               </div>
@@ -254,6 +256,11 @@ export default function Home() {
       >
         <ArrowUp className="size-4 md:size-5" />
       </Button>
+
+      {/* Lightbox */}
+      {lightbox && (
+        <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />
+      )}
     </div>
   );
 }
@@ -264,12 +271,14 @@ function SchoolCard({
   regionBase,
   index,
   defaultOpen,
+  onImageClick,
 }: {
   school: { name: string; folder: string; id: number };
   regionKey: RegionKey;
   regionBase: string;
   index: number;
   defaultOpen: boolean;
+  onImageClick: (img: { src: string; alt: string }) => void;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const colors = regionColors[regionKey];
@@ -310,12 +319,10 @@ function SchoolCard({
               <h4 className="mb-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground md:mb-3 md:text-xs">
                 School Count · 学校统计
               </h4>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <ZoomableImage
                 src={`/${regionBase}/${school.folder}/count.png`}
                 alt={`${school.name} Count`}
-                loading="lazy"
-                className="w-full rounded-md border md:rounded-lg"
+                onClick={onImageClick}
               />
               <p className="mt-1.5 text-[10px] text-muted-foreground md:mt-2 md:text-xs">
                 数据来源{' '}
@@ -334,12 +341,10 @@ function SchoolCard({
               <h4 className="mb-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground md:mb-3 md:text-xs">
                 Student Population · 学生人口
               </h4>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <ZoomableImage
                 src={`/${regionBase}/${school.folder}/population.png`}
                 alt={`${school.name} Population`}
-                loading="lazy"
-                className="w-full rounded-md border md:rounded-lg"
+                onClick={onImageClick}
               />
               <p className="mt-1.5 text-[10px] text-muted-foreground md:mt-2 md:text-xs">
                 数据来源{' '}
@@ -357,5 +362,73 @@ function SchoolCard({
         </CollapsibleContent>
       </div>
     </Collapsible>
+  );
+}
+
+function ZoomableImage({
+  src,
+  alt,
+  onClick,
+}: {
+  src: string;
+  alt: string;
+  onClick: (img: { src: string; alt: string }) => void;
+}) {
+  return (
+    <button
+      type="button"
+      className="group relative block w-full cursor-zoom-in overflow-hidden rounded-md border md:rounded-lg"
+      onClick={() => onClick({ src, alt })}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt={alt} loading="lazy" className="w-full transition-transform duration-200 group-hover:scale-[1.02]" />
+      <span className="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+        <ZoomIn className="size-3.5" />
+      </span>
+    </button>
+  );
+}
+
+function Lightbox({
+  src,
+  alt,
+  onClose,
+}: {
+  src: string;
+  alt: string;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKey);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKey);
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm animate-in fade-in duration-200"
+      onClick={onClose}
+    >
+      <button
+        className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 md:right-5 md:top-5"
+        onClick={onClose}
+        aria-label="关闭"
+      >
+        <X className="size-5" />
+      </button>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
+        className="max-h-[90vh] max-w-full rounded-lg object-contain shadow-2xl animate-in zoom-in-95 duration-200"
+        onClick={e => e.stopPropagation()}
+      />
+    </div>
   );
 }
