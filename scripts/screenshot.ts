@@ -2,6 +2,7 @@ import puppeteer from 'puppeteer';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import readline from 'readline';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.resolve(__dirname, '..', 'public');
@@ -20,10 +21,6 @@ interface SchoolTask {
   rawLine: string;
 }
 
-/**
- * 扫描 public 下所有区域的 newSchoolList.md，解析待截图学校
- * 格式: - 学校名称, 文件夹名, 学校ID
- */
 function loadNewSchools(): SchoolTask[] {
   const tasks: SchoolTask[] = [];
   const regionDirs = fs.readdirSync(PUBLIC_DIR, { withFileTypes: true })
@@ -58,18 +55,13 @@ function loadNewSchools(): SchoolTask[] {
   return tasks;
 }
 
-/**
- * 截图完成后，将学校从 newSchoolList.md 移到 doneSchoolList.md
- */
 function markDone(task: SchoolTask) {
   const newFile = path.join(PUBLIC_DIR, task.regionBase, 'newSchoolList.md');
   const doneFile = path.join(PUBLIC_DIR, task.regionBase, 'doneSchoolList.md');
 
-  // 追加到 doneSchoolList.md
   const doneEntry = `- ${task.name}, ${task.folder}, ${task.id}\n`;
   fs.appendFileSync(doneFile, doneEntry, 'utf-8');
 
-  // 从 newSchoolList.md 中移除
   if (fs.existsSync(newFile)) {
     const content = fs.readFileSync(newFile, 'utf-8');
     const lines = content.split('\n').filter(line => line.trim() !== task.rawLine);
@@ -77,17 +69,55 @@ function markDone(task: SchoolTask) {
   }
 }
 
+function waitForEnter(prompt: string): Promise<void> {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  return new Promise(resolve => {
+    rl.question(prompt, () => {
+      rl.close();
+      resolve();
+    });
+  });
+}
+
+/**
+ * count.png — 只截取表格区域
+ */
 async function captureCount(page: puppeteer.Page, schoolId: number, outputPath: string) {
   const url = SYNCRAT_URL(schoolId);
   console.log(`    count.png  ← ${url}`);
   await page.goto(url, { waitUntil: 'networkidle2', timeout: 60_000 });
-  await page.screenshot({ path: outputPath, fullPage: true });
+
+  // 定位表格元素并截图
+  const table = await page.$('table');
+  if (table) {
+    await table.screenshot({ path: outputPath });
+  } else {
+    console.warn('    ⚠ 未找到表格元素，使用全页截图');
+    await page.screenshot({ path: outputPath, fullPage: true });
+  }
 }
 
+/**
+ * population.png — 需要用户过人机验证，滚动到底部后截图
+ */
 async function capturePopulation(page: puppeteer.Page, schoolId: number, outputPath: string) {
   const url = EDUCOUNTS_URL(schoolId);
   console.log(`    population.png ← ${url}`);
   await page.goto(url, { waitUntil: 'networkidle2', timeout: 60_000 });
+
+  await waitForEnter('    ⏳ 请在浏览器中完成人机验证，完成后按 Enter 继续...');
+
+  // 滚动到页面最底部，确保所有内容加载
+  let previousHeight = 0;
+  while (true) {
+    const currentHeight = await page.evaluate('document.body.scrollHeight');
+    if (currentHeight === previousHeight) break;
+    previousHeight = currentHeight;
+    await page.evaluate('window.scrollTo(0, document.body.scrollHeight)');
+    await new Promise(r => setTimeout(r, 800));
+  }
+
+  await new Promise(r => setTimeout(r, 1000));
   await page.screenshot({ path: outputPath, fullPage: true });
 }
 
@@ -101,7 +131,7 @@ async function main() {
 
   console.log(`\n📸 准备截图 ${tasks.length} 所学校...\n`);
 
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 800 });
 

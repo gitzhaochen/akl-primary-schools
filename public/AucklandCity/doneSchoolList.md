@@ -1,0 +1,6 @@
+- Mount Eden Normal School, MtEdenNormalSchool, 1378
+- Cornwall Park District School, CornwallParkDistrictSchool, 1256
+- Remuera School, RemueraSchool, 1462
+- Meadowbank School, MeadowbankSchool, 1370
+- Victoria Avenue School, VictoriaAvenueSchool, 1544
+- Newton Central School, NewtonCentralSchool, 1392

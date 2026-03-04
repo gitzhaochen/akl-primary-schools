@@ -1,0 +1,19 @@
+- Long Bay School, LongBaySchool, 1342
+- Glamorgan School, GlamorganSchool, 1283
+- Torbay School, TorbaySchool, 1538
+- Ōteha Valley School, OtehaValleySchool, 6946
+- Browns Bay School, BrownsBaySchool, 1237
+- Pinehill School, PinehillSchool, 6932
+- Murrays Bay School, MurraysBaySchool, 1387
+- Mairangi Bay School, MairangiBaySchool, 1343
+- Sunnynook School, SunnynookSchool, 1518
+- Campbells Bay School, CampbellsBaySchool, 1242
+- Forrest Hill School, ForrestHillSchool, 1278
+- Milford School, MilfordSchool, 1375
+- Takapuna School, TakapunaSchool, 1525
+- Hauraki School, HaurakiSchool, 1304
+- Belmont School, BelmontSchool, 1226
+- Bayswater School, BayswaterSchool, 1221
+- Vauxhall School, VauxhallSchool, 1541
+- Stanley Bay School, StanleyBaySchool, 1512
+- Devonport School, DevonportSchool, 1260
