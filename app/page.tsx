@@ -48,6 +48,14 @@ const regions = [
       { name: 'Newton Central School', folder: 'NewtonCentralSchool', id: 1392 },
     ],
   },
+  {
+    key: 'wc',
+    name: 'Waitakere City',
+    base: 'WaitakereCity',
+    schools: [
+      { name: 'Hobsonville Point Primary School', folder: 'HobsonvillePointSchool', id: 6788 },
+    ],
+  },
 ] as const;
 
 type RegionKey = (typeof regions)[number]['key'];
@@ -68,6 +76,13 @@ const regionColors: Record<RegionKey, { bg: string; text: string; border: string
     border: 'border-ac',
     badge: 'bg-ac text-ac-foreground',
     headerBg: 'bg-ac text-ac-foreground',
+  },
+  wc: {
+    bg: 'bg-wc',
+    text: 'text-wc',
+    border: 'border-wc',
+    badge: 'bg-wc text-wc-foreground',
+    headerBg: 'bg-wc text-wc-foreground',
   },
 };
 

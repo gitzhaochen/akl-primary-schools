@@ -47,6 +47,8 @@
     --color-ns-foreground: var(--ns-foreground);
     --color-ac: var(--ac);
     --color-ac-foreground: var(--ac-foreground);
+    --color-wc: var(--wc);
+    --color-wc-foreground: var(--wc-foreground);
     --color-hero: var(--hero);
     --color-hero-light: var(--hero-light);
 }
@@ -88,6 +90,8 @@
     --ns-foreground: oklch(0.98 0 0);
     --ac: oklch(0.45 0.1 40);
     --ac-foreground: oklch(0.98 0 0);
+    --wc: oklch(0.45 0.12 260);
+    --wc-foreground: oklch(0.98 0 0);
     --hero: oklch(0.3 0.06 250);
     --hero-light: oklch(0.42 0.1 250);
 }
