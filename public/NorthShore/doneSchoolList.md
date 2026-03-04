@@ -19,3 +19,4 @@
 - Devonport School, DevonportSchool, 1260
 - Upper Harbour School, UpperHarbourSchool, 6955
 - Greenhithe School, GreenhitheSchool, 1299
+- Sherwood School, SherwoodSchool, 1481

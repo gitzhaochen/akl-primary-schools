@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { useState, useEffect, useCallback } from 'react';
-import { Search, ChevronDown, ChevronUp, ArrowUp, School, MapPin, X, ZoomIn } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { cn } from '@/lib/utils';
+import { useState, useEffect, useCallback } from 'react'
+import { Search, ChevronDown, ChevronUp, ArrowUp, School, MapPin, X, ZoomIn } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { cn } from '@/lib/utils'
 
 const regions = [
   {
@@ -17,6 +17,7 @@ const regions = [
       { name: 'Long Bay School', folder: 'LongBaySchool', id: 1342 },
       { name: 'Glamorgan School', folder: 'GlamorganSchool', id: 1283 },
       { name: 'Torbay School', folder: 'TorbaySchool', id: 1538 },
+      { name: 'Sherwood School', folder: 'SherwoodSchool', id: 1481 },
       { name: 'Ōteha Valley School', folder: 'OtehaValleySchool', id: 6946 },
       { name: 'Browns Bay School', folder: 'BrownsBaySchool', id: 1237 },
       { name: 'Pinehill School', folder: 'PinehillSchool', id: 6932 },
@@ -34,8 +35,8 @@ const regions = [
       { name: 'Stanley Bay School', folder: 'StanleyBaySchool', id: 1512 },
       { name: 'Devonport School', folder: 'DevonportSchool', id: 1260 },
       { name: 'Upper Harbour School', folder: 'UpperHarbourSchool', id: 6955 },
-      { name: 'Greenhithe School', folder: 'GreenhitheSchool', id: 1299 },
-    ],
+      { name: 'Greenhithe School', folder: 'GreenhitheSchool', id: 1299 }
+    ]
   },
   {
     key: 'ac',
@@ -47,22 +48,20 @@ const regions = [
       { name: 'Remuera School', folder: 'RemueraSchool', id: 1462 },
       { name: 'Meadowbank School', folder: 'MeadowbankSchool', id: 1370 },
       { name: 'Victoria Avenue School', folder: 'VictoriaAvenueSchool', id: 1544 },
-      { name: 'Newton Central School', folder: 'NewtonCentralSchool', id: 1392 },
-    ],
+      { name: 'Newton Central School', folder: 'NewtonCentralSchool', id: 1392 }
+    ]
   },
   {
     key: 'wc',
     name: 'Waitakere City',
     base: 'WaitakereCity',
-    schools: [
-      { name: 'Hobsonville Point Primary School', folder: 'HobsonvillePointSchool', id: 6788 },
-    ],
-  },
-] as const;
+    schools: [{ name: 'Hobsonville Point Primary School', folder: 'HobsonvillePointSchool', id: 6788 }]
+  }
+] as const
 
-type RegionKey = (typeof regions)[number]['key'];
+type RegionKey = (typeof regions)[number]['key']
 
-const totalSchools = regions.reduce((sum, r) => sum + r.schools.length, 0);
+const totalSchools = regions.reduce((sum, r) => sum + r.schools.length, 0)
 
 const regionColors: Record<RegionKey, { bg: string; text: string; border: string; badge: string; headerBg: string }> = {
   ns: {
@@ -70,57 +69,57 @@ const regionColors: Record<RegionKey, { bg: string; text: string; border: string
     text: 'text-ns',
     border: 'border-ns',
     badge: 'bg-ns text-ns-foreground',
-    headerBg: 'bg-ns text-ns-foreground',
+    headerBg: 'bg-ns text-ns-foreground'
   },
   ac: {
     bg: 'bg-ac',
     text: 'text-ac',
     border: 'border-ac',
     badge: 'bg-ac text-ac-foreground',
-    headerBg: 'bg-ac text-ac-foreground',
+    headerBg: 'bg-ac text-ac-foreground'
   },
   wc: {
     bg: 'bg-wc',
     text: 'text-wc',
     border: 'border-wc',
     badge: 'bg-wc text-wc-foreground',
-    headerBg: 'bg-wc text-wc-foreground',
-  },
-};
+    headerBg: 'bg-wc text-wc-foreground'
+  }
+}
 
 export default function Home() {
-  const [query, setQuery] = useState('');
-  const [activeRegion, setActiveRegion] = useState<'all' | RegionKey>('all');
-  const [showBackTop, setShowBackTop] = useState(false);
-  const [allOpen, setAllOpen] = useState<boolean | null>(null);
-  const [toggleKey, setToggleKey] = useState(0);
-  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+  const [query, setQuery] = useState('')
+  const [activeRegion, setActiveRegion] = useState<'all' | RegionKey>('all')
+  const [showBackTop, setShowBackTop] = useState(false)
+  const [allOpen, setAllOpen] = useState<boolean | null>(null)
+  const [toggleKey, setToggleKey] = useState(0)
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null)
 
   useEffect(() => {
-    const onScroll = () => setShowBackTop(window.scrollY > 400);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    const onScroll = () => setShowBackTop(window.scrollY > 400)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const toggleAll = useCallback((open: boolean) => {
-    setAllOpen(open);
-    setToggleKey(k => k + 1);
-  }, []);
+    setAllOpen(open)
+    setToggleKey((k) => k + 1)
+  }, [])
 
   const filteredRegions = regions
-    .filter(r => activeRegion === 'all' || activeRegion === r.key)
-    .map(r => ({
+    .filter((r) => activeRegion === 'all' || activeRegion === r.key)
+    .map((r) => ({
       ...r,
-      schools: r.schools.filter(s => s.name.toLowerCase().includes(query.toLowerCase())),
+      schools: r.schools.filter((s) => s.name.toLowerCase().includes(query.toLowerCase()))
     }))
-    .filter(r => r.schools.length > 0);
+    .filter((r) => r.schools.length > 0)
 
-  const shownCount = filteredRegions.reduce((sum, r) => sum + r.schools.length, 0);
+  const shownCount = filteredRegions.reduce((sum, r) => sum + r.schools.length, 0)
 
   const tabs = [
     { key: 'all' as const, label: '全部', count: totalSchools },
-    ...regions.map(r => ({ key: r.key, label: r.name, count: r.schools.length })),
-  ];
+    ...regions.map((r) => ({ key: r.key, label: r.name, count: r.schools.length }))
+  ]
 
   return (
     <div className="min-h-screen">
@@ -131,9 +130,7 @@ export default function Home() {
             <School className="size-3.5 md:size-4" />
             <span>Auckland Primary Schools</span>
           </div>
-          <h1 className="text-xl font-bold tracking-tight md:text-4xl">
-            奥克兰小学统计数据与学生人口一览
-          </h1>
+          <h1 className="text-xl font-bold tracking-tight md:text-4xl">奥克兰小学统计数据与学生人口一览</h1>
           <div className="mt-4 flex items-center justify-center gap-6 md:mt-6 md:gap-10">
             <div className="text-center">
               <div className="text-2xl font-bold md:text-3xl">{totalSchools}</div>
@@ -158,15 +155,27 @@ export default function Home() {
               <Input
                 placeholder="搜索学校名称…"
                 value={query}
-                onChange={e => setQuery(e.target.value)}
+                onChange={(e) => setQuery(e.target.value)}
                 className="pl-9"
               />
             </div>
             <div className="flex shrink-0 gap-1.5">
-              <Button variant="outline" size="icon" className="size-9 md:hidden" onClick={() => toggleAll(true)} aria-label="全部展开">
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-9 md:hidden"
+                onClick={() => toggleAll(true)}
+                aria-label="全部展开"
+              >
                 <ChevronDown className="size-4" />
               </Button>
-              <Button variant="outline" size="icon" className="size-9 md:hidden" onClick={() => toggleAll(false)} aria-label="全部折叠">
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-9 md:hidden"
+                onClick={() => toggleAll(false)}
+                aria-label="全部折叠"
+              >
                 <ChevronUp className="size-4" />
               </Button>
             </div>
@@ -175,7 +184,7 @@ export default function Home() {
           {/* Row 2 on mobile: tabs + count */}
           <div className="flex items-center gap-2 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="flex shrink-0 gap-1.5">
-              {tabs.map(tab => (
+              {tabs.map((tab) => (
                 <button
                   key={tab.key}
                   onClick={() => setActiveRegion(tab.key)}
@@ -190,9 +199,7 @@ export default function Home() {
                   <span
                     className={cn(
                       'rounded-full px-1.5 py-0.5 text-[10px] leading-none md:text-[11px]',
-                      activeRegion === tab.key
-                        ? 'bg-white/25'
-                        : 'bg-muted'
+                      activeRegion === tab.key ? 'bg-white/25' : 'bg-muted'
                     )}
                   >
                     {tab.count}
@@ -230,11 +237,16 @@ export default function Home() {
           </div>
         )}
 
-        {filteredRegions.map(region => {
-          const colors = regionColors[region.key];
+        {filteredRegions.map((region) => {
+          const colors = regionColors[region.key]
           return (
             <section key={region.key} className="mb-7 md:mb-10">
-              <div className={cn('mb-3 flex items-center gap-2 border-b-[3px] pb-2 md:mb-5 md:gap-3 md:pb-3', colors.border)}>
+              <div
+                className={cn(
+                  'mb-3 flex items-center gap-2 border-b-[3px] pb-2 md:mb-5 md:gap-3 md:pb-3',
+                  colors.border
+                )}
+              >
                 <MapPin className={cn('size-4 md:size-5', colors.text)} />
                 <h2 className="text-base font-bold md:text-xl">{region.name}</h2>
                 <Badge className={cn('rounded-full border-0 text-[10px] md:text-xs', colors.badge)}>
@@ -256,7 +268,7 @@ export default function Home() {
                 ))}
               </div>
             </section>
-          );
+          )
         })}
       </main>
 
@@ -265,9 +277,7 @@ export default function Home() {
         size="icon"
         className={cn(
           'fixed bottom-4 right-4 z-50 size-10 rounded-full shadow-lg transition-all duration-300 md:bottom-6 md:right-6 md:size-11',
-          showBackTop
-            ? 'translate-y-0 opacity-100'
-            : 'pointer-events-none translate-y-4 opacity-0'
+          showBackTop ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
         )}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       >
@@ -275,11 +285,9 @@ export default function Home() {
       </Button>
 
       {/* Lightbox */}
-      {lightbox && (
-        <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />
-      )}
+      {lightbox && <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={() => setLightbox(null)} />}
     </div>
-  );
+  )
 }
 
 function SchoolCard({
@@ -288,24 +296,24 @@ function SchoolCard({
   regionBase,
   index,
   defaultOpen,
-  onImageClick,
+  onImageClick
 }: {
-  school: { name: string; folder: string; id: number };
-  regionKey: RegionKey;
-  regionBase: string;
-  index: number;
-  defaultOpen: boolean;
-  onImageClick: (img: { src: string; alt: string }) => void;
+  school: { name: string; folder: string; id: number }
+  regionKey: RegionKey
+  regionBase: string
+  index: number
+  defaultOpen: boolean
+  onImageClick: (img: { src: string; alt: string }) => void
 }) {
-  const [open, setOpen] = useState(defaultOpen);
-  const colors = regionColors[regionKey];
+  const [open, setOpen] = useState(defaultOpen)
+  const colors = regionColors[regionKey]
 
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <div
         className={cn(
-          'overflow-hidden rounded-xl bg-white transition-shadow hover:shadow-sm ', cn('border border-border border-l-4', colors.border)
-          
+          'overflow-hidden rounded-xl bg-white transition-shadow hover:shadow-sm ',
+          cn('border border-border border-l-4', colors.border)
         )}
       >
         <CollapsibleTrigger asChild>
@@ -320,15 +328,14 @@ function SchoolCard({
               <span className="mr-2 text-[10px] opacity-60 md:mr-2.5 md:text-xs">#{index + 1}</span>
               {school.name}
             </h3>
-            <div className={cn(
-              'flex size-6 shrink-0 items-center justify-center rounded-full md:size-7',
-              'bg-muted/60 transition-colors group-hover:bg-muted'
-            )}>
+            <div
+              className={cn(
+                'flex size-6 shrink-0 items-center justify-center rounded-full md:size-7',
+                'bg-muted/60 transition-colors group-hover:bg-muted'
+              )}
+            >
               <ChevronDown
-                className={cn(
-                  'size-3.5 transition-transform duration-300 md:size-4',
-                  !open && '-rotate-90'
-                )}
+                className={cn('size-3.5 transition-transform duration-300 md:size-4', !open && '-rotate-90')}
               />
             </div>
           </button>
@@ -383,17 +390,17 @@ function SchoolCard({
         </CollapsibleContent>
       </div>
     </Collapsible>
-  );
+  )
 }
 
 function ZoomableImage({
   src,
   alt,
-  onClick,
+  onClick
 }: {
-  src: string;
-  alt: string;
-  onClick: (img: { src: string; alt: string }) => void;
+  src: string
+  alt: string
+  onClick: (img: { src: string; alt: string }) => void
 }) {
   return (
     <button
@@ -402,34 +409,31 @@ function ZoomableImage({
       onClick={() => onClick({ src, alt })}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt={alt} loading="lazy" className="w-full transition-transform duration-200 group-hover:scale-[1.02]" />
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="w-full transition-transform duration-200 group-hover:scale-[1.02]"
+      />
       <span className="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
         <ZoomIn className="size-3.5" />
       </span>
     </button>
-  );
+  )
 }
 
-function Lightbox({
-  src,
-  alt,
-  onClose,
-}: {
-  src: string;
-  alt: string;
-  onClose: () => void;
-}) {
+function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleKey);
+      if (e.key === 'Escape') onClose()
+    }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKey)
     return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleKey);
-    };
-  }, [onClose]);
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKey)
+    }
+  }, [onClose])
 
   return (
     <div
@@ -448,8 +452,8 @@ function Lightbox({
         src={src}
         alt={alt}
         className="max-h-[90vh] max-w-full rounded-lg object-contain shadow-2xl animate-in zoom-in-95 duration-200"
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       />
     </div>
-  );
+  )
 }
