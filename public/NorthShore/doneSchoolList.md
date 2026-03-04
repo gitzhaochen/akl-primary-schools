@@ -18,3 +18,4 @@
 - Stanley Bay School, StanleyBaySchool, 1512
 - Devonport School, DevonportSchool, 1260
 - Upper Harbour School, UpperHarbourSchool, 6955
+- Greenhithe School, GreenhitheSchool, 1299

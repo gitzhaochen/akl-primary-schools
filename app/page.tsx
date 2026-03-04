@@ -34,6 +34,7 @@ const regions = [
       { name: 'Stanley Bay School', folder: 'StanleyBaySchool', id: 1512 },
       { name: 'Devonport School', folder: 'DevonportSchool', id: 1260 },
       { name: 'Upper Harbour School', folder: 'UpperHarbourSchool', id: 6955 },
+      { name: 'Greenhithe School', folder: 'GreenhitheSchool', id: 1299 },
     ],
   },
   {
