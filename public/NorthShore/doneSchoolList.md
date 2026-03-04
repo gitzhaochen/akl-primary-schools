@@ -20,3 +20,4 @@
 - Upper Harbour School, UpperHarbourSchool, 6955
 - Greenhithe School, GreenhitheSchool, 1299
 - Sherwood School, SherwoodSchool, 1481
+- Sherwood School, SherwoodSchool, 1481
