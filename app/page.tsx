@@ -46,43 +46,6 @@ const regions = [
 
 const totalSchools = regions.reduce((sum, r) => sum + r.schools.length, 0);
 
-function SchoolCard({ school, regionKey, regionBase, index }: {
-  school: { name: string; folder: string; id: number };
-  regionKey: string;
-  regionBase: string;
-  index: number;
-}) {
-  const [collapsed, setCollapsed] = useState(false);
-
-  return (
-    <div className={`school-card ${regionKey}`}>
-      <div className={`card-header ${regionKey}`} onClick={() => setCollapsed(!collapsed)}>
-        <h3><span className="index-num">#{index + 1}</span>{school.name}</h3>
-        <span className={`toggle ${collapsed ? 'collapsed' : ''}`}>
-          <svg viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" /></svg>
-        </span>
-      </div>
-      <div className={`card-body ${collapsed ? 'collapsed' : ''}`} style={{ maxHeight: collapsed ? 0 : 2000 }}>
-        <div className="card-section">
-          <h4>School Count · 学校统计</h4>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`/${regionBase}/${school.folder}/count.png`} alt={`${school.name} Count`} loading="lazy" />
-          <div className="source">
-            数据来源 <a href={`https://education.syncrat.com/education/school/${school.id}`} target="_blank" rel="noopener noreferrer">education.syncrat.com</a>
-          </div>
-        </div>
-        <div className="card-section">
-          <h4>Student Population · 学生人口</h4>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`/${regionBase}/${school.folder}/population.png`} alt={`${school.name} Population`} loading="lazy" />
-          <div className="source">
-            数据来源 <a href={`https://www.educationcounts.govt.nz/find-school/school/population/year?school=${school.id}`} target="_blank" rel="noopener noreferrer">educationcounts.govt.nz</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function Home() {
   const [query, setQuery] = useState('');
