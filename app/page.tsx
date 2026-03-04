@@ -1,6 +1,12 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { Search, ChevronDown, ChevronUp, ArrowUp, School, MapPin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { cn } from '@/lib/utils';
 
 const regions = [
   {
@@ -42,17 +48,35 @@ const regions = [
       { name: 'Newton Central School', folder: 'NewtonCentralSchool', id: 1392 },
     ],
   },
-];
+] as const;
+
+type RegionKey = (typeof regions)[number]['key'];
 
 const totalSchools = regions.reduce((sum, r) => sum + r.schools.length, 0);
 
+const regionColors: Record<RegionKey, { bg: string; text: string; border: string; badge: string; headerBg: string }> = {
+  ns: {
+    bg: 'bg-ns',
+    text: 'text-ns',
+    border: 'border-ns',
+    badge: 'bg-ns text-ns-foreground',
+    headerBg: 'bg-ns text-ns-foreground',
+  },
+  ac: {
+    bg: 'bg-ac',
+    text: 'text-ac',
+    border: 'border-ac',
+    badge: 'bg-ac text-ac-foreground',
+    headerBg: 'bg-ac text-ac-foreground',
+  },
+};
 
 export default function Home() {
   const [query, setQuery] = useState('');
-  const [activeRegion, setActiveRegion] = useState('all');
+  const [activeRegion, setActiveRegion] = useState<'all' | RegionKey>('all');
   const [showBackTop, setShowBackTop] = useState(false);
-  const [allCollapsed, setAllCollapsed] = useState<boolean | null>(null);
-  const [collapseKey, setCollapseKey] = useState(0);
+  const [allOpen, setAllOpen] = useState<boolean | null>(null);
+  const [toggleKey, setToggleKey] = useState(0);
 
   useEffect(() => {
     const onScroll = () => setShowBackTop(window.scrollY > 400);
@@ -60,9 +84,9 @@ export default function Home() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const toggleAll = useCallback((expand: boolean) => {
-    setAllCollapsed(!expand);
-    setCollapseKey(k => k + 1);
+  const toggleAll = useCallback((open: boolean) => {
+    setAllOpen(open);
+    setToggleKey(k => k + 1);
   }, []);
 
   const filteredRegions = regions
@@ -75,94 +99,263 @@ export default function Home() {
 
   const shownCount = filteredRegions.reduce((sum, r) => sum + r.schools.length, 0);
 
+  const tabs = [
+    { key: 'all' as const, label: '全部', count: totalSchools },
+    ...regions.map(r => ({ key: r.key, label: r.name, count: r.schools.length })),
+  ];
+
   return (
-    <>
-      <header>
-        <h1>Auckland Primary Schools</h1>
-        <p>奥克兰小学统计数据与学生人口一览</p>
-        <div className="stats-row">
-          <div className="stat-item"><div className="stat-num">{totalSchools}</div><div className="stat-label">学校总数</div></div>
-          <div className="stat-item"><div className="stat-num">{regions.length}</div><div className="stat-label">覆盖区域</div></div>
+    <div className="min-h-screen">
+      {/* Hero */}
+      <header className="bg-linear-to-br from-hero to-hero-light px-4 py-8 text-center text-white md:py-14">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs backdrop-blur-sm md:mb-3 md:px-4 md:py-1.5 md:text-sm">
+            <School className="size-3.5 md:size-4" />
+            <span>Auckland Primary Schools</span>
+          </div>
+          <h1 className="text-xl font-bold tracking-tight md:text-4xl">
+            奥克兰小学统计数据与学生人口一览
+          </h1>
+          <div className="mt-4 flex items-center justify-center gap-6 md:mt-6 md:gap-10">
+            <div className="text-center">
+              <div className="text-2xl font-bold md:text-3xl">{totalSchools}</div>
+              <div className="mt-0.5 text-[11px] text-white/75 md:mt-1 md:text-xs">学校总数</div>
+            </div>
+            <div className="h-6 w-px bg-white/25 md:h-8" />
+            <div className="text-center">
+              <div className="text-2xl font-bold md:text-3xl">{regions.length}</div>
+              <div className="mt-0.5 text-[11px] text-white/75 md:mt-1 md:text-xs">覆盖区域</div>
+            </div>
+          </div>
         </div>
       </header>
 
-      <div className="toolbar">
-        <input type="text" placeholder="搜索学校名称…" value={query} onChange={e => setQuery(e.target.value)} />
-        <div className="region-tabs">
-          {[{ key: 'all', label: '全部', count: totalSchools }, ...regions.map(r => ({ key: r.key, label: r.name, count: r.schools.length }))].map(tab => (
-            <div key={tab.key} className={`region-tab ${activeRegion === tab.key ? 'active' : ''}`} onClick={() => setActiveRegion(tab.key)}>
-              {tab.label} <span className="tab-count">{tab.count}</span>
+      {/* Toolbar */}
+      <div className="sticky top-0 z-50 border-b bg-background/95 px-4 py-2.5 backdrop-blur-md md:py-3">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2.5 md:flex-row md:flex-wrap md:items-center md:gap-3">
+          {/* Row 1 on mobile: search + action buttons */}
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="搜索学校名称…"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                className="pl-9"
+              />
             </div>
-          ))}
-        </div>
-        <span className="count-badge">显示 {shownCount} / {totalSchools}</span>
-        <button className="btn" onClick={() => toggleAll(true)}>全部展开</button>
-        <button className="btn" onClick={() => toggleAll(false)}>全部折叠</button>
-      </div>
-
-      <div className="content">
-        {filteredRegions.map(region => (
-          <div key={region.key} className="region-section">
-            <div className={`region-header ${region.key}`}>
-              <h2>{region.name}</h2>
-              <span className={`region-badge ${region.key}`}>{region.schools.length} 所学校</span>
-            </div>
-            <div className="school-list">
-              {region.schools.map((s, i) => (
-                <SchoolCardControlled
-                  key={`${s.folder}-${collapseKey}`}
-                  school={s}
-                  regionKey={region.key}
-                  regionBase={region.base}
-                  index={i}
-                  forceCollapsed={allCollapsed}
-                />
-              ))}
+            <div className="flex shrink-0 gap-1.5">
+              <Button variant="outline" size="icon" className="size-9 md:hidden" onClick={() => toggleAll(true)} aria-label="全部展开">
+                <ChevronDown className="size-4" />
+              </Button>
+              <Button variant="outline" size="icon" className="size-9 md:hidden" onClick={() => toggleAll(false)} aria-label="全部折叠">
+                <ChevronUp className="size-4" />
+              </Button>
             </div>
           </div>
-        ))}
+
+          {/* Row 2 on mobile: tabs + count */}
+          <div className="flex items-center gap-2 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex shrink-0 gap-1.5">
+              {tabs.map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveRegion(tab.key)}
+                  className={cn(
+                    'inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-medium transition-all md:gap-1.5 md:px-3.5 md:text-sm',
+                    activeRegion === tab.key
+                      ? 'border-primary bg-primary text-primary-foreground shadow-sm'
+                      : 'border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground'
+                  )}
+                >
+                  {tab.label}
+                  <span
+                    className={cn(
+                      'rounded-full px-1.5 py-0.5 text-[10px] leading-none md:text-[11px]',
+                      activeRegion === tab.key
+                        ? 'bg-white/25'
+                        : 'bg-muted'
+                    )}
+                  >
+                    {tab.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <span className="shrink-0 text-xs text-muted-foreground md:text-sm">
+              {shownCount}/{totalSchools}
+            </span>
+          </div>
+
+          {/* Desktop-only expand/collapse buttons */}
+          <div className="hidden gap-1.5 md:flex">
+            <Button variant="outline" size="sm" onClick={() => toggleAll(true)}>
+              <ChevronDown className="size-3.5" />
+              全部展开
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => toggleAll(false)}>
+              <ChevronUp className="size-3.5" />
+              全部折叠
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <button className={`back-top ${showBackTop ? 'show' : ''}`} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑</button>
-    </>
+      {/* Content */}
+      <main className="mx-auto max-w-7xl px-4 py-5 md:py-8">
+        {filteredRegions.length === 0 && (
+          <div className="py-16 text-center text-muted-foreground md:py-20">
+            <Search className="mx-auto mb-3 size-8 opacity-30 md:size-10" />
+            <p className="text-base font-medium md:text-lg">没有找到匹配的学校</p>
+            <p className="mt-1 text-xs md:text-sm">尝试调整搜索关键词或切换区域</p>
+          </div>
+        )}
+
+        {filteredRegions.map(region => {
+          const colors = regionColors[region.key];
+          return (
+            <section key={region.key} className="mb-7 md:mb-10">
+              <div className={cn('mb-3 flex items-center gap-2 border-b-[3px] pb-2 md:mb-5 md:gap-3 md:pb-3', colors.border)}>
+                <MapPin className={cn('size-4 md:size-5', colors.text)} />
+                <h2 className="text-base font-bold md:text-xl">{region.name}</h2>
+                <Badge className={cn('rounded-full border-0 text-[10px] md:text-xs', colors.badge)}>
+                  {region.schools.length} 所学校
+                </Badge>
+              </div>
+
+              <div className="flex flex-col gap-3 md:gap-5">
+                {region.schools.map((school, i) => (
+                  <SchoolCard
+                    key={`${school.folder}-${toggleKey}`}
+                    school={school}
+                    regionKey={region.key}
+                    regionBase={region.base}
+                    index={i}
+                    defaultOpen={allOpen ?? false}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </main>
+
+      {/* Back to top */}
+      <Button
+        size="icon"
+        className={cn(
+          'fixed bottom-4 right-4 z-50 size-10 rounded-full shadow-lg transition-all duration-300 md:bottom-6 md:right-6 md:size-11',
+          showBackTop
+            ? 'translate-y-0 opacity-100'
+            : 'pointer-events-none translate-y-4 opacity-0'
+        )}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      >
+        <ArrowUp className="size-4 md:size-5" />
+      </Button>
+    </div>
   );
 }
 
-function SchoolCardControlled({ school, regionKey, regionBase, index, forceCollapsed }: {
+function SchoolCard({
+  school,
+  regionKey,
+  regionBase,
+  index,
+  defaultOpen,
+}: {
   school: { name: string; folder: string; id: number };
-  regionKey: string;
+  regionKey: RegionKey;
   regionBase: string;
   index: number;
-  forceCollapsed: boolean | null;
+  defaultOpen: boolean;
 }) {
-  const [collapsed, setCollapsed] = useState(forceCollapsed ?? false);
+  const [open, setOpen] = useState(defaultOpen);
+  const colors = regionColors[regionKey];
 
   return (
-    <div className={`school-card ${regionKey}`}>
-      <div className={`card-header ${regionKey}`} onClick={() => setCollapsed(!collapsed)}>
-        <h3><span className="index-num">#{index + 1}</span>{school.name}</h3>
-        <span className={`toggle ${collapsed ? 'collapsed' : ''}`}>
-          <svg viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" /></svg>
-        </span>
-      </div>
-      <div className={`card-body ${collapsed ? 'collapsed' : ''}`} style={{ maxHeight: collapsed ? 0 : 2000 }}>
-        <div className="card-section">
-          <h4>School Count · 学校统计</h4>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`/${regionBase}/${school.folder}/count.png`} alt={`${school.name} Count`} loading="lazy" />
-          <div className="source">
-            数据来源 <a href={`https://education.syncrat.com/education/school/${school.id}`} target="_blank" rel="noopener noreferrer">education.syncrat.com</a>
+    <Collapsible open={open} onOpenChange={setOpen}>
+      <div
+        className={cn(
+          'overflow-hidden rounded-xl border-l-4 bg-card shadow-sm transition-shadow hover:shadow-md',
+          colors.border
+        )}
+      >
+        <CollapsibleTrigger asChild>
+          <button
+            className={cn(
+              'flex w-full items-center justify-between px-3 py-2.5 text-left transition-colors md:px-5 md:py-3.5',
+              colors.headerBg
+            )}
+          >
+            <h3 className="text-sm font-semibold md:text-[15px]">
+              <span className="mr-2 text-[10px] opacity-60 md:mr-2.5 md:text-xs">#{index + 1}</span>
+              {school.name}
+            </h3>
+            <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/15 md:size-7">
+              <ChevronDown
+                className={cn(
+                  'size-3.5 transition-transform duration-300 md:size-4',
+                  !open && '-rotate-90'
+                )}
+              />
+            </div>
+          </button>
+        </CollapsibleTrigger>
+
+        <CollapsibleContent>
+          <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr]">
+            <div className="border-b border-border p-3 md:border-b-0 md:border-r md:p-5">
+              <h4 className="mb-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground md:mb-3 md:text-xs">
+                School Count · 学校统计
+              </h4>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/${regionBase}/${school.folder}/count.png`}
+                alt={`${school.name} Count`}
+                loading="lazy"
+                className="w-full rounded-md border md:rounded-lg"
+              />
+              <p className="mt-1.5 text-[10px] text-muted-foreground md:mt-2 md:text-xs">
+                数据来源{' '}
+                <a
+                  href={`https://education.syncrat.com/education/school/${school.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline-offset-2 hover:underline"
+                >
+                  education.syncrat.com
+                </a>
+              </p>
+            </div>
+
+            <div className="p-3 md:p-5">
+              <h4 className="mb-2 text-[10px] font-medium uppercase tracking-wider text-muted-foreground md:mb-3 md:text-xs">
+                Student Population · 学生人口
+              </h4>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/${regionBase}/${school.folder}/population.png`}
+                alt={`${school.name} Population`}
+                loading="lazy"
+                className="w-full rounded-md border md:rounded-lg"
+              />
+              <p className="mt-1.5 text-[10px] text-muted-foreground md:mt-2 md:text-xs">
+                数据来源{' '}
+                <a
+                  href={`https://www.educationcounts.govt.nz/find-school/school/population/year?school=${school.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline-offset-2 hover:underline"
+                >
+                  educationcounts.govt.nz
+                </a>
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="card-section">
-          <h4>Student Population · 学生人口</h4>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`/${regionBase}/${school.folder}/population.png`} alt={`${school.name} Population`} loading="lazy" />
-          <div className="source">
-            数据来源 <a href={`https://www.educationcounts.govt.nz/find-school/school/population/year?school=${school.id}`} target="_blank" rel="noopener noreferrer">educationcounts.govt.nz</a>
-          </div>
-        </div>
+        </CollapsibleContent>
       </div>
-    </div>
+    </Collapsible>
   );
 }
