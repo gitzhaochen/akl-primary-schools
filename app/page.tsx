@@ -304,22 +304,26 @@ function SchoolCard({
     <Collapsible open={open} onOpenChange={setOpen}>
       <div
         className={cn(
-          'overflow-hidden rounded-xl border-l-4 bg-card shadow-sm transition-shadow hover:shadow-md',
-          colors.border
+          'overflow-hidden rounded-xl bg-white transition-shadow hover:shadow-sm ', cn('border border-border border-l-4', colors.border)
+          
         )}
       >
         <CollapsibleTrigger asChild>
           <button
             className={cn(
-              'flex w-full items-center justify-between px-3 py-2.5 text-left transition-colors md:px-5 md:py-3.5',
-              colors.headerBg
+              'group flex w-full items-center justify-between px-3 py-2.5 text-left transition-colors hover:bg-muted/40 md:px-5 md:py-3.5 border-b cursor-pointer',
+              colors.text,
+              open ? colors.border : 'border-transparent'
             )}
           >
             <h3 className="text-sm font-semibold md:text-[15px]">
               <span className="mr-2 text-[10px] opacity-60 md:mr-2.5 md:text-xs">#{index + 1}</span>
               {school.name}
             </h3>
-            <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/15 md:size-7">
+            <div className={cn(
+              'flex size-6 shrink-0 items-center justify-center rounded-full md:size-7',
+              'bg-muted/60 transition-colors group-hover:bg-muted'
+            )}>
               <ChevronDown
                 className={cn(
                   'size-3.5 transition-transform duration-300 md:size-4',
