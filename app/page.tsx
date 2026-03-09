@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 const regions = [
   {
     key: 'ns',
-    name: 'North Shore',
+    name: '北岸',
     base: 'NorthShore',
     schools: [
       { name: 'Long Bay School', folder: 'LongBaySchool', id: 1342 },
@@ -40,7 +40,7 @@ const regions = [
   },
   {
     key: 'ac',
-    name: 'Auckland City',
+    name: '中区',
     base: 'AucklandCity',
     schools: [
       { name: 'Mount Eden Normal School', folder: 'MtEdenNormalSchool', id: 1378 },
@@ -54,7 +54,7 @@ const regions = [
   },
   {
     key: 'ea',
-    name: 'East Auckland',
+    name: '东区',
     base: 'EastAuckland',
     schools: [
       { name: 'Pigeon Mountain School', folder: 'PigeonMountainSchool', id: 1439 },
@@ -75,7 +75,7 @@ const regions = [
   },
   {
     key: 'wc',
-    name: 'Waitakere City',
+    name: '西区',
     base: 'WaitakereCity',
     schools: [{ name: 'Hobsonville Point Primary School', folder: 'HobsonvillePointSchool', id: 6788 }]
   }
