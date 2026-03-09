@@ -56,6 +56,19 @@ const regions = [
     name: 'Waitakere City',
     base: 'WaitakereCity',
     schools: [{ name: 'Hobsonville Point Primary School', folder: 'HobsonvillePointSchool', id: 6788 }]
+  },
+  {
+    key: 'ea',
+    name: 'East Auckland',
+    base: 'EastAuckland',
+    schools: [
+      { name: 'Pigeon Mountain School', folder: 'PigeonMountainSchool', id: 1439 },
+      { name: 'Cockle Bay School', folder: 'CockleBaySchool', id: 1253 },
+      { name: 'Glendowie School', folder: 'GlendowieSchool', id: 1294 },
+      { name: 'Botany Downs Primary School', folder: 'BotanyDownsPrimarySchool', id: 1235 },
+      { name: 'Sunnyhills School', folder: 'SunnyhillsSchool', id: 1515 },
+      { name: 'Mellons Bay School', folder: 'MellonsBaySchool', id: 1371 }
+    ]
   }
 ] as const
 
@@ -84,6 +97,13 @@ const regionColors: Record<RegionKey, { bg: string; text: string; border: string
     border: 'border-wc',
     badge: 'bg-wc text-wc-foreground',
     headerBg: 'bg-wc text-wc-foreground'
+  },
+  ea: {
+    bg: 'bg-ea',
+    text: 'text-ea',
+    border: 'border-ea',
+    badge: 'bg-ea text-ea-foreground',
+    headerBg: 'bg-ea text-ea-foreground'
   }
 }
 
