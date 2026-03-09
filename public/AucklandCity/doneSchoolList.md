@@ -4,3 +4,4 @@
 - Meadowbank School, MeadowbankSchool, 1370
 - Victoria Avenue School, VictoriaAvenueSchool, 1544
 - Newton Central School, NewtonCentralSchool, 1392
+- Maungawhau School, MaungawhauSchool, 1367

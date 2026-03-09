@@ -4,3 +4,11 @@
 - Botany Downs Primary School, BotanyDownsPrimarySchool, 1235
 - Sunnyhills School, SunnyhillsSchool, 1515
 - Mellons Bay School, MellonsBaySchool, 1371
+- Macleans Primary School, MacleansPrimarySchool, 1388
+- Point View School, PointViewSchool, 6921
+- Owairoa Primary School, OwairoaPrimarySchool, 1413
+- Shelly Park Primary School, ShellyParkPrimarySchool, 1480
+- Howick Primary School, HowickPrimarySchool, 1319
+- Elm Park School, ElmParkSchool, 1269
+- Wakaaranga Primary School, WakaarangaPrimarySchool, 1560
+- Willowbank School, WillowbankSchool, 6959

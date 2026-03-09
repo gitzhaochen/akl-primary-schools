@@ -48,14 +48,9 @@ const regions = [
       { name: 'Remuera School', folder: 'RemueraSchool', id: 1462 },
       { name: 'Meadowbank School', folder: 'MeadowbankSchool', id: 1370 },
       { name: 'Victoria Avenue School', folder: 'VictoriaAvenueSchool', id: 1544 },
-      { name: 'Newton Central School', folder: 'NewtonCentralSchool', id: 1392 }
+      { name: 'Newton Central School', folder: 'NewtonCentralSchool', id: 1392 },
+      { name: 'Maungawhau School', folder: 'MaungawhauSchool', id: 1367 }
     ]
-  },
-  {
-    key: 'wc',
-    name: 'Waitakere City',
-    base: 'WaitakereCity',
-    schools: [{ name: 'Hobsonville Point Primary School', folder: 'HobsonvillePointSchool', id: 6788 }]
   },
   {
     key: 'ea',
@@ -67,8 +62,22 @@ const regions = [
       { name: 'Glendowie School', folder: 'GlendowieSchool', id: 1294 },
       { name: 'Botany Downs Primary School', folder: 'BotanyDownsPrimarySchool', id: 1235 },
       { name: 'Sunnyhills School', folder: 'SunnyhillsSchool', id: 1515 },
-      { name: 'Mellons Bay School', folder: 'MellonsBaySchool', id: 1371 }
+      { name: 'Mellons Bay School', folder: 'MellonsBaySchool', id: 1371 },
+      { name: 'Macleans Primary School', folder: 'MacleansPrimarySchool', id: 1388 },
+      { name: 'Point View School', folder: 'PointViewSchool', id: 6921 },
+      { name: 'Owairoa Primary School', folder: 'OwairoaPrimarySchool', id: 1413 },
+      { name: 'Shelly Park Primary School', folder: 'ShellyParkPrimarySchool', id: 1480 },
+      { name: 'Howick Primary School', folder: 'HowickPrimarySchool', id: 1319 },
+      { name: 'Elm Park School', folder: 'ElmParkSchool', id: 1269 },
+      { name: 'Wakaaranga Primary School', folder: 'WakaarangaPrimarySchool', id: 1560 },
+      { name: 'Willowbank School', folder: 'WillowbankSchool', id: 6959 }
     ]
+  },
+  {
+    key: 'wc',
+    name: 'Waitakere City',
+    base: 'WaitakereCity',
+    schools: [{ name: 'Hobsonville Point Primary School', folder: 'HobsonvillePointSchool', id: 6788 }]
   }
 ] as const
 
@@ -275,17 +284,19 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col gap-3 md:gap-5">
-                {region.schools.map((school, i) => (
-                  <SchoolCard
-                    key={`${school.folder}-${toggleKey}`}
-                    school={school}
-                    regionKey={region.key}
-                    regionBase={region.base}
-                    index={i}
-                    defaultOpen={allOpen ?? false}
-                    onImageClick={setLightbox}
-                  />
-                ))}
+                {region.schools
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((school, i) => (
+                    <SchoolCard
+                      key={`${school.folder}-${toggleKey}`}
+                      school={school}
+                      regionKey={region.key}
+                      regionBase={region.base}
+                      index={i}
+                      defaultOpen={allOpen ?? false}
+                      onImageClick={setLightbox}
+                    />
+                  ))}
               </div>
             </section>
           )

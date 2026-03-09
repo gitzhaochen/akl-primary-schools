@@ -4,3 +4,4 @@
 - Meadowbank School
 - Victoria Avenue School
 - Newton Central School
+- Maungawhau School
