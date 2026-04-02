@@ -20,4 +20,13 @@
 - Upper Harbour School, UpperHarbourSchool, 6955
 - Greenhithe School, GreenhitheSchool, 1299
 - Sherwood School, SherwoodSchool, 1481
-- Sherwood School, SherwoodSchool, 1481
+- Albany Primary School, AlbanyPrimarySchool, 1202
+- Beach Haven School, BeachHavenSchool, 1223
+- Glenfield Primary School, GlenfieldPrimarySchool, 1296
+- Manuka Primary School, ManukaPrimarySchool, 1350
+- Marlborough School, MarlboroughSchool, 1361
+- Northcote Primary School, NorthcotePrimarySchool, 1395
+- Ridgeview School, RidgeviewSchool, 1433
+- Target Road School, TargetRoadSchool, 1528
+- Willow Park School, WillowParkSchool, 1573
+- Windy Ridge School, WindyRidgeSchool, 1575

@@ -14,28 +14,38 @@ const regions = [
     name: '北岸',
     base: 'NorthShore',
     schools: [
-      { name: 'Long Bay School', folder: 'LongBaySchool', id: 1342 },
-      { name: 'Glamorgan School', folder: 'GlamorganSchool', id: 1283 },
-      { name: 'Torbay School', folder: 'TorbaySchool', id: 1538 },
-      { name: 'Sherwood School', folder: 'SherwoodSchool', id: 1481 },
-      { name: 'Ōteha Valley School', folder: 'OtehaValleySchool', id: 6946 },
-      { name: 'Browns Bay School', folder: 'BrownsBaySchool', id: 1237 },
-      { name: 'Pinehill School', folder: 'PinehillSchool', id: 6932 },
-      { name: 'Murrays Bay School', folder: 'MurraysBaySchool', id: 1387 },
-      { name: 'Mairangi Bay School', folder: 'MairangiBaySchool', id: 1343 },
-      { name: 'Sunnynook School', folder: 'SunnynookSchool', id: 1518 },
-      { name: 'Campbells Bay School', folder: 'CampbellsBaySchool', id: 1242 },
-      { name: 'Forrest Hill School', folder: 'ForrestHillSchool', id: 1278 },
-      { name: 'Milford School', folder: 'MilfordSchool', id: 1375 },
-      { name: 'Takapuna School', folder: 'TakapunaSchool', id: 1525 },
-      { name: 'Hauraki School', folder: 'HaurakiSchool', id: 1304 },
-      { name: 'Belmont School', folder: 'BelmontSchool', id: 1226 },
+      { name: 'Albany Primary School', folder: 'AlbanyPrimarySchool', id: 1202 },
       { name: 'Bayswater School', folder: 'BayswaterSchool', id: 1221 },
-      { name: 'Vauxhall School', folder: 'VauxhallSchool', id: 1541 },
-      { name: 'Stanley Bay School', folder: 'StanleyBaySchool', id: 1512 },
+      { name: 'Beach Haven School', folder: 'BeachHavenSchool', id: 1223 },
+      { name: 'Belmont School', folder: 'BelmontSchool', id: 1226 },
+      { name: 'Browns Bay School', folder: 'BrownsBaySchool', id: 1237 },
+      { name: 'Campbells Bay School', folder: 'CampbellsBaySchool', id: 1242 },
       { name: 'Devonport School', folder: 'DevonportSchool', id: 1260 },
+      { name: 'Forrest Hill School', folder: 'ForrestHillSchool', id: 1278 },
+      { name: 'Glamorgan School', folder: 'GlamorganSchool', id: 1283 },
+      { name: 'Glenfield Primary School', folder: 'GlenfieldPrimarySchool', id: 1296 },
+      { name: 'Greenhithe School', folder: 'GreenhitheSchool', id: 1299 },
+      { name: 'Hauraki School', folder: 'HaurakiSchool', id: 1304 },
+      { name: 'Long Bay School', folder: 'LongBaySchool', id: 1342 },
+      { name: 'Mairangi Bay School', folder: 'MairangiBaySchool', id: 1343 },
+      { name: 'Manuka Primary School', folder: 'ManukaPrimarySchool', id: 1350 },
+      { name: 'Marlborough School', folder: 'MarlboroughSchool', id: 1361 },
+      { name: 'Milford School', folder: 'MilfordSchool', id: 1375 },
+      { name: 'Murrays Bay School', folder: 'MurraysBaySchool', id: 1387 },
+      { name: 'Northcote Primary School', folder: 'NorthcotePrimarySchool', id: 1395 },
+      { name: 'Ōteha Valley School', folder: 'OtehaValleySchool', id: 6946 },
+      { name: 'Pinehill School', folder: 'PinehillSchool', id: 6932 },
+      { name: 'Ridgeview School', folder: 'RidgeviewSchool', id: 1433 },
+      { name: 'Sherwood School', folder: 'SherwoodSchool', id: 1481 },
+      { name: 'Stanley Bay School', folder: 'StanleyBaySchool', id: 1512 },
+      { name: 'Sunnynook School', folder: 'SunnynookSchool', id: 1518 },
+      { name: 'Takapuna School', folder: 'TakapunaSchool', id: 1525 },
+      { name: 'Target Road School', folder: 'TargetRoadSchool', id: 1528 },
+      { name: 'Torbay School', folder: 'TorbaySchool', id: 1538 },
       { name: 'Upper Harbour School', folder: 'UpperHarbourSchool', id: 6955 },
-      { name: 'Greenhithe School', folder: 'GreenhitheSchool', id: 1299 }
+      { name: 'Vauxhall School', folder: 'VauxhallSchool', id: 1541 },
+      { name: 'Willow Park School', folder: 'WillowParkSchool', id: 1573 },
+      { name: 'Windy Ridge School', folder: 'WindyRidgeSchool', id: 1575 }
     ]
   },
   {
@@ -77,7 +87,15 @@ const regions = [
     key: 'wc',
     name: '西区',
     base: 'WaitakereCity',
-    schools: [{ name: 'Hobsonville Point Primary School', folder: 'HobsonvillePointSchool', id: 6788 }]
+    schools: [
+      { name: 'Hobsonville Point Primary School', folder: 'HobsonvillePointSchool', id: 6788 },
+      // { name: 'Konini School', folder: 'KoniniSchool', id: 1335 },
+      // { name: 'Massey Primary School', folder: 'MasseyPrimarySchool', id: 1363 },
+      // { name: 'Royal Road School', folder: 'RoyalRoadSchool', id: 1476 },
+      { name: 'Scott Point School', folder: 'ScottPointSchool', id: 725 }
+      // { name: 'Sunnyvale School', folder: 'SunnyvaleSchool', id: 1519 },
+      // { name: 'Swanson School', folder: 'SwansonSchool', id: 1521 }
+    ]
   }
 ] as const
 

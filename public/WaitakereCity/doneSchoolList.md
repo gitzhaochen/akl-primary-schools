@@ -1,0 +1,6 @@
+- Konini School, KoniniSchool, 1335
+- Massey Primary School, MasseyPrimarySchool, 1363
+- Royal Road School, RoyalRoadSchool, 1476
+- Scott Point School, ScottPointSchool, 725
+- Sunnyvale School, SunnyvaleSchool, 1519
+- Swanson School, SwansonSchool, 1521
